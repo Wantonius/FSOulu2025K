@@ -1,0 +1,6 @@
+1. Liikennevalo / Traffic light
+
+Luodaan liikennevalo. Valossa on kolme eri kennoa; punainen, keltainen ja vihreä. Vain yksi valo on kerrallaan päällä. Jokainen valo on päällä kolme sekuntia (setInterval!). Sekvenssi on vihreä-keltainen-punainen-vihreä.
+
+We create a traffic light. It has three lights; red, yellow and green. Only one is on at a time. Every light is on for three seconds (setInterval!). Sequence is green-yellow-red-green.
+
