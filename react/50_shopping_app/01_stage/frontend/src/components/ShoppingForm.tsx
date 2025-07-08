@@ -41,29 +41,35 @@ const ShoppingForm = (props:Props) => {
 	}
 	
 	return(
-		<Box component="form" onSubmit={onSubmit} sx={{width:"40%",mx:"auto"}}>
+		<Box component="form" onSubmit={onSubmit} sx={{width:"20%",mx:"auto"}}>
 			<TextField 
 				type="text" 
 				name="type" 
 				id="type" 
 				label="Type" 
 				onChange={onChange} 
-				value={state.type}/>
+				value={state.type}
+				sx={{mb:3}}/>
+			<br/>
 			<TextField 
 				type="number" 
 				name="count" 
 				id="count" 
 				label="Count"
 				onChange={onChange}
-				value={state.count}/>
+				value={state.count}
+				sx={{mb:3}}/>
+			<br/>
 			<TextField
 				type="number"
 				name="price"
 				id="price"
 				label="Price"
 				onChange={onChange}
-				value={state.price}/>
-			<Button type="submit" color="secondary" variant="contained">Add Item</Button>
+				value={state.price}
+				sx={{mb:2}}/>
+			<br/>
+			<Button type="submit" color="secondary" variant="contained" >Add Item</Button>
 		</Box>
 	)
 }
