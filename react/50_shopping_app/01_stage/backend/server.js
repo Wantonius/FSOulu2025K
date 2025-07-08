@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const shoppingroute = require("./routes/shoppingroute");
 
 const app = express();
 
@@ -15,6 +16,10 @@ mongoose.connect(url).then(
 	() => console.log("Connected to mongodb"),
 	(err) => console.log("Failed to connect to mongodb. Reason:",err)
 )
+
+mongoose.set("toJSON",{virtuals:true});
+
+app.use("/api",shoppingroute);
 
 console.log("Running in port 3000");
 
