@@ -174,6 +174,10 @@ const useAction = () => {
 						return;
 				}
 			} else {
+				if(response.status === 403) {
+					clearState("Your session has expired");
+					return;
+				}
 				let errorMessage = " Server responded with a status "+response.status+" "+response.statusText;
 				switch(urlRequest.action) {
 					case "getlist": {
@@ -200,11 +204,11 @@ const useAction = () => {
 						return;
 					}
 					case "login": {
-						//TODO
+						setError("Login failed."+errorMessage);
 						return;
 					}
 					case "logout": {
-						//TODO
+						clearState("Server responded with an error. Logging you out.");
 						return;
 					}
 					default:
@@ -219,10 +223,13 @@ const useAction = () => {
 
 	//Helper functions sent to component to trigger communication with backend
 
-	const getList = () => {
+	const getList = (token:string) => {
 		setUrlRequest({
 			request: new Request("/api/shopping",{
-				method:"GET"
+				method:"GET",
+				headers:{
+					"token":token
+				}
 				}),
 			action:"getlist"
 		});
@@ -233,7 +240,8 @@ const useAction = () => {
 			request: new Request("/api/shopping",{
 				method:"POST",
 				headers:{
-					"Content-Type":"application/json"
+					"Content-Type":"application/json",
+					"token":state.token
 				},
 				body:JSON.stringify(item)
 			}),
@@ -244,7 +252,10 @@ const useAction = () => {
 	const remove = (id:string) => {
 		setUrlRequest({
 			request: new Request("/api/shopping/"+id,{
-				method:"DELETE"
+				method:"DELETE",
+				headers:{
+					"token":state.token
+				}
 			}),
 			action:"removeitem"
 		})
@@ -255,7 +266,8 @@ const useAction = () => {
 			request: new Request("/api/shopping/"+item.id,{
 				method:"PUT",
 				headers:{
-					"Content-Type":"application/json"
+					"Content-Type":"application/json",
+					"token":state.token
 				},
 				body:JSON.stringify(item)
 			}),
@@ -277,11 +289,29 @@ const useAction = () => {
 	}
 	
 	const login = (user:User) => {
-		//TODO
+		setUser(user.username);
+		setUrlRequest({
+			request: new Request("/login",{
+				method:"POST",
+				headers:{
+					"Content-Type":"application/json"
+				},
+				body:JSON.stringify(user)
+			}),
+			action:"login"
+		})
 	}
 	
 	const logout = () => {
-		//TODO
+		setUrlRequest({
+			request:new Request("/logout",{
+				method:"POST",
+				headers:{
+					"token":state.token
+				}
+			}),
+			action:"logout"
+		})
 	}
 	
 	return {state,add,remove,edit,register,login,logout,setError}
