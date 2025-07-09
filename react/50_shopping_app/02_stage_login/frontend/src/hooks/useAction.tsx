@@ -1,10 +1,16 @@
 import {useState,useEffect} from 'react';
 import ShoppingItem from '../models/ShoppingItem';
+import User from '../models/User';
 
-//The application state. Currently with just array of ShoppingItems. Later more
+//The application state. 
 
 interface State {
 	list:ShoppingItem[];
+	isLogged:boolean;
+	token:string;
+	loading:boolean;
+	error:string;
+	user:string;
 }
 
 //Helper state to setup and trigger communication with backend. Contains url, headers and body and information on what we are doing.
@@ -17,13 +23,39 @@ interface UrlRequest {
 const useAction = () => {
 	
 	const [state,setState] = useState<State>({
-		list:[]
+		list:[],
+		isLogged:false,
+		token:"",
+		loading:false,
+		error:"",
+		user:""
 	});
 	
 	const [urlRequest,setUrlRequest] = useState<UrlRequest>({
 		request:new Request("",{}),
 		action:""
 	});
+	
+	//Helper functions to run state changes
+	
+	const setLoading = (loading:boolean) => {
+		setState((state) => {
+			return {
+				...state,
+				error:"",
+				loading:loading
+			}
+		})
+	}
+	
+	const setError = (error:string) => {
+		setState((state) => {
+			return {
+				...state,
+				error:error
+			}
+		})
+	}
 	
 	//UseEffect to get the list at the start of the application
 	
@@ -36,8 +68,9 @@ const useAction = () => {
 	useEffect(() => {
 		
 		const fetchData = async () => {
-			
+			setLoading(true);
 			const response = await fetch(urlRequest.request);
+			setLoading(false);
 			if(!response) {
 				console.log("Server did not respond");
 				return;
@@ -47,12 +80,15 @@ const useAction = () => {
 					case "getlist": {
 						const temp = await response.json();
 						if(!temp) {
-							console.log("Failed to parse response.");
+							setError("Failed to parse response. Try again later.");
 							return;
 						}
 						const list = temp as ShoppingItem[];
-						setState({
-							list:list
+						setState((state) => {
+							return {
+								...state,
+								list:list
+							}
 						})
 						return;
 					}
@@ -62,26 +98,53 @@ const useAction = () => {
 						getList();
 						return;
 					}
+					case "register":{
+						setError("Register success");
+						return;
+					}
+					case "login":{
+						//TODO
+						return;
+					}
+					case "logout":{
+						//TODO
+						return;
+					}
 					default: 
 						return;
 				}
 			} else {
-				const errorMessage = " Server responded with a status "+response.status+" "+response.statusText;
+				let errorMessage = " Server responded with a status "+response.status+" "+response.statusText;
 				switch(urlRequest.action) {
 					case "getlist": {
-						console.log("Failed to fetch list."+errorMessage);
+						setError("Failed to fetch list."+errorMessage);
 						return;
 					}
 					case "additem": {
-						console.log("Failed to add new item."+errorMessage);
+						setError("Failed to add new item."+errorMessage);
 						return;
 					}
 					case "removeitem": {
-						console.log("Failed to remove item."+errorMessage);
+						setError("Failed to remove item."+errorMessage);
 						return;
 					}
 					case "edititem": {
-						console.log("Failed to edit item."+errorMessage);
+						setError("Failed to edit item."+errorMessage);
+						return;
+					}
+					case "register": {
+						if(response.status === 409) {
+							errorMessage = " Username already in use";
+						}
+						setError("Register failed."+errorMessage);
+						return;
+					}
+					case "login": {
+						//TODO
+						return;
+					}
+					case "logout": {
+						//TODO
 						return;
 					}
 					default:
@@ -140,7 +203,28 @@ const useAction = () => {
 		})
 	}
 	
-	return {state,add,remove,edit}
+	const register = (user:User) => {
+		setUrlRequest({
+			request: new Request("/register",{
+				method:"POST",
+				headers:{
+					"Content-Type":"application/json"
+				},
+				body:JSON.stringify(user)
+			}),
+			action:"register"
+		})
+	}
+	
+	const login = (user:User) => {
+		//TODO
+	}
+	
+	const logout = (token:string) => {
+		//TODO
+	}
+	
+	return {state,add,remove,edit,register,login,logout,setError}
 }
 
 export default useAction;
