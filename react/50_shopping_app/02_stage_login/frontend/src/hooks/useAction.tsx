@@ -220,7 +220,7 @@ const useAction = () => {
 		//TODO
 	}
 	
-	const logout = (token:string) => {
+	const logout = () => {
 		//TODO
 	}
 	
