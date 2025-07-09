@@ -4,7 +4,7 @@ const itemModel = require("../models/item");
 const router = express.Router();
 
 router.get("/shopping",function(req,res) {
-	itemModel.find().then(function(items) {
+	itemModel.find({"user":req.session.user}).then(function(items) {
 		return res.status(200).json(items);
 	}).catch(function(err) {
 		console.log("Failed to find shopping items. Reason",err);
@@ -22,7 +22,8 @@ router.post("/shopping",function(req,res) {
 	const item = new itemModel({
 		type:req.body.type,
 		count:req.body.count,
-		price:req.body.price
+		price:req.body.price,
+		user:req.session.user
 	})
 	item.save().then(function(item) {
 		return res.status(201).json(item);
@@ -33,7 +34,7 @@ router.post("/shopping",function(req,res) {
 })
 
 router.delete("/shopping/:id",function(req,res) {
-	itemModel.deleteOne({"_id":req.params.id}).then(function() {
+	itemModel.deleteOne({"_id":req.params.id,"user":req.session.user}).then(function() {
 		return res.status(200).json({"Message":"Success"});
 	}).catch(function(err) {
 		console.log("Failed to remove item. Reason",err);
@@ -51,9 +52,10 @@ router.put("/shopping/:id",function(req,res) {
 	const item = {
 		type:req.body.type,
 		count:req.body.count,
-		price:req.body.price
+		price:req.body.price,
+		user:req.session.user
 	}
-	itemModel.replaceOne({"_id":req.params.id},item).then(function() {
+	itemModel.replaceOne({"_id":req.params.id,"user":req.session.user},item).then(function() {
 		return res.status(200).json({"Message":"Success"});
 	}).catch(function(err) {
 		console.log("Failed to edit item. Reason",err);

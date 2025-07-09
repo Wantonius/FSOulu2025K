@@ -1,4 +1,4 @@
-import {List,ListItem} from '@mui/material';
+import {List,ListItem,Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
 
 interface Props {
@@ -22,22 +22,22 @@ const Navbar = (props:Props) => {
 		return(
 			<List sx={{display:"flex",flexDirection:"row"}}>
 				<ListItem>
-					Shopping App
+					<Typography variant="h6">Shopping App</Typography>
 				</ListItem>
 				<ListItem>
-					<Link to="/">Shopping List</Link>
+					<Link to="/"><Typography variant="h6">Shopping List</Typography></Link>
 				</ListItem>
 				<ListItem>
-					<Link to="/form">Add new item</Link>
+					<Link to="/form"><Typography variant="h6">Add new item</Typography></Link>
 				</ListItem>
 				<ListItem>
-					Logged in as {props.user}
+					<Typography variant="h6">Logged in as {props.user}</Typography>
 				</ListItem>
 				<ListItem>
-					<Link to="/" onClick={props.logout}>Logout</Link>
+					<Link to="/" onClick={props.logout}><Typography variant="h6">Logout</Typography></Link>
 				</ListItem>
 				<ListItem>
-					{message}
+					<Typography variant="h6">{message}</Typography>
 				</ListItem>
 			</List>
 		)
@@ -45,10 +45,10 @@ const Navbar = (props:Props) => {
 		return(
 			<List sx={{display:"flex",flexDirection:"row"}}>
 				<ListItem>
-					Shopping App
+					<Typography variant="h6">Shopping App</Typography>
 				</ListItem>
 				<ListItem>
-					{message}
+					<Typography variant="h6">{message}</Typography>
 				</ListItem>
 			</List>
 		)		
