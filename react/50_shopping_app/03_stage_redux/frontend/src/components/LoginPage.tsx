@@ -1,7 +1,7 @@
 import React,{useState} from 'react';
 import {Box,Button,TextField} from '@mui/material';
 import User from '../models/User';
-import {register,registerFailed} from '../actions/loginActions';
+import {register,login,registerFailed} from '../actions/loginActions';
 import type {Action} from '../types/states';
 import type {ThunkDispatch} from 'redux-thunk';
 import {useDispatch} from 'react-redux';
@@ -48,11 +48,11 @@ const LoginPage = (props:Props) => {
 	const onLogin = (event:React.SyntheticEvent) => {
 		event.preventDefault();
 		if(state.username.length < 4 || state.password.length < 8) {
-			props.setError("Username must be at least 4 and password 8 characters long");
+			dispatch(registerFailed("Username must be at least 4 and password 8 characters long"));
 			return;
 		}
 		const user = new User(state.username,state.password);
-		props.login(user);
+		dispatch(login(user));
 	}
 	
 	return (
