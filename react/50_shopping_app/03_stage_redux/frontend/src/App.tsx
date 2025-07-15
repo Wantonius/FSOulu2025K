@@ -1,21 +1,24 @@
-import useAction from './hooks/useAction';
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
 import {Routes,Route,Navigate} from 'react-router-dom';
 import LoginPage from './components/LoginPage';
+import type {AppState} from './types/states';
+import {useSelector} from 'react-redux';
 function App() {
-
-	const {state,add,remove,edit,register,login,logout,setError} = useAction();
 	
-	if(state.isLogged) {
+	const selector = (state:AppState) => state.login.isLogged;
+
+	const isLogged = useSelector(selector);
+	
+	if(isLogged) {
 		return (
 			<>
-				<Navbar isLogged={state.isLogged} user={state.user} loading={state.loading} error={state.error} logout={logout}/>
+				<Navbar />
 				<hr/>
 				<Routes>
-					<Route path="/" element={<ShoppingList list={state.list} remove={remove} edit={edit}/>}/>
-					<Route path="/form" element={<ShoppingForm add={add}/>}/>
+					<Route path="/" element={<ShoppingList />}/>
+					<Route path="/form" element={<ShoppingForm />}/>
 					<Route path="*" element={<Navigate to="/"/>}/>	
 				</Routes>
 			</>
@@ -23,10 +26,10 @@ function App() {
 	} else {
 		return(
 			<>				
-				<Navbar isLogged={state.isLogged} user={state.user} loading={state.loading} error={state.error} logout={logout}/>
+				<Navbar />
 				<hr/>
 				<Routes>
-					<Route path="/" element={<LoginPage register={register} login={login} setError={setError}/>}/>
+					<Route path="/" element={<LoginPage />}/>
 					<Route path="*" element={<Navigate to="/"/>}/>	
 				</Routes>
 			</>	

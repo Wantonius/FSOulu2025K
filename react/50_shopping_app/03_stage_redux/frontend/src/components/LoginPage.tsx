@@ -11,13 +11,8 @@ interface State {
 	password:string;
 }
 
-interface Props {
-	register(user:User):void;
-	login(user:User):void;
-	setError(error:string):void;	
-}
 
-const LoginPage = (props:Props) => {
+const LoginPage = () => {
 	
 	const [state,setState] = useState<State>({
 		username:"",
