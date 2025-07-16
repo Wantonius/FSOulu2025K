@@ -1,4 +1,4 @@
-import {User} from '../models/User';
+import User from '../models/User';
 import type {LoginState,Message,Token} from '../types/states';
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 
@@ -54,6 +54,7 @@ export const login = createAsyncThunk("login",async (user:User,thunkApi) => {
 	})
 	const response = await fetch(request);
 	if(response.ok) {
+		thunkApi.dispatch(setUser(user.username));
 		const temp = await response.json();
 		const data = temp as Token;
 		//TODO dispatch getlist;
@@ -99,6 +100,12 @@ const loginSlice = createSlice({
 	reducers:{
 		setUser:(state,action) => {
 			state.user = action.payload as string;
+		},
+		loading:(state,action) => {
+			state.loading = true;
+		},
+		stopLoading:(state,action) => {
+			state.loading = false;
 		}
 	},
 	extraReducers:(builder) => {
@@ -135,5 +142,5 @@ const loginSlice = createSlice({
 	}
 })
 
-export const {setUser} = loginSlice.actions;
+export const {setUser,loading,stopLoading} = loginSlice.actions;
 export default loginSlice.reducer;

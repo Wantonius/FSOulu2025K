@@ -4,9 +4,9 @@ import Row from './Row';
 import RemoveRow from './RemoveRow';
 import EditRow from './EditRow';
 import {Table,TableHead,TableBody,TableRow,TableCell} from '@mui/material';
-import {remove,edit} from '../actions/shoppingActions';
-import type {AppState,Action} from '../types/states';
-import type {ThunkDispatch} from 'redux-thunk';
+import {remove,edit} from '../store/shoppingSlice';
+import type {AppState} from '../types/states';
+import type {ThunkDispatch,PayloadAction} from '@reduxjs/toolkit';
 import {useDispatch,useSelector} from 'react-redux';
 
 interface State {
@@ -22,7 +22,7 @@ const ShoppingList = () => {
 		editIndex:-1
 	})
 	
-	const dispatch:ThunkDispatch<any,any,Action> = useDispatch();
+	const dispatch:ThunkDispatch<any,any,PayloadAction> = useDispatch();
 	
 	const stateSelector = (state:AppState) => {
 		return {
@@ -62,12 +62,12 @@ const ShoppingList = () => {
 	}
 	
 	const removeItem = (id:string) => {
-		dispatch(remove(token,id));
+		dispatch(remove({message:id,token:token}));
 		changeMode(0,"cancel");
 	}
 	
 	const editItem = (item:ShoppingItem) => {
-		dispatch(edit(token,item));
+		dispatch(edit({item:item,token:token}));
 		changeMode(0,"cancel");
 	}
 	

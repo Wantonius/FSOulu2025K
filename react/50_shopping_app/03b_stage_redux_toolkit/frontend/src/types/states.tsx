@@ -27,3 +27,8 @@ export interface Message {
 export interface Token {
 	token:string;
 }
+
+export interface FetchItem {
+	item:ShoppingItem;
+	token:string;
+}
