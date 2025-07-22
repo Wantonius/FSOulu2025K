@@ -4,24 +4,24 @@ import Row from './Row';
 import RemoveRow from './RemoveRow';
 import EditRow from './EditRow';
 import {Table,TableHead,TableBody,TableRow,TableCell} from '@mui/material';
+import useAction from '../hooks/useAction';
+import useAppState from '../hooks/useAppState';
 
 interface State {
 	removeIndex:number;
 	editIndex:number;
 }
 
-interface Props {
-	list:ShoppingItem[];
-	remove(id:string):void;
-	edit(item:ShoppingItem):void;
-}
 
-const ShoppingList = (props:Props) => {
+const ShoppingList = () => {
 	
 	const [state,setState] = useState<State>({
 		removeIndex:-1,
 		editIndex:-1
 	})
+	
+	const {list} = useAppState();
+	const {remove,edit} = useAction();
 	
 	const changeMode = (index:number,mode:string) => {
 		switch(mode) {
@@ -52,16 +52,16 @@ const ShoppingList = (props:Props) => {
 	}
 	
 	const removeItem = (id:string) => {
-		props.remove(id);
+		remove(id);
 		changeMode(0,"cancel");
 	}
 	
 	const editItem = (item:ShoppingItem) => {
-		props.edit(item);
+		edit(item);
 		changeMode(0,"cancel");
 	}
 	
-	const shoppingItems = props.list.map((item,index) => {
+	const shoppingItems = list.map((item,index) => {
 		if(state.removeIndex === index) {
 			return(
 				<RemoveRow key={item.id} item={item} changeMode={changeMode} removeItem={removeItem}/>

@@ -3,7 +3,7 @@ import ShoppingItem from '../models/ShoppingItem';
 import User from '../models/User';
 import * as actionConstants from '../types/actionConstants';
 import useAppState from './useAppState';
-import ActionContext from '../context/ActionContext':
+import ActionContext from '../context/ActionContext';
 
 
 //Helper state to setup and trigger communication with backend. Contains url, headers and body and information on what we are doing.
@@ -299,7 +299,7 @@ const useAction = () => {
 		})
 	}
 	
-	return {state,add,remove,edit,register,login,logout,setError}
+	return {getList,add,remove,edit,register,login,logout,setError}
 }
 
 export default useAction;

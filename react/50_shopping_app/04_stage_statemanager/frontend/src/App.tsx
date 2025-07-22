@@ -1,4 +1,6 @@
+import {useEffect} from 'react';
 import useAction from './hooks/useAction';
+import useAppState from './hooks/useAppState';
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import Navbar from './components/Navbar';
@@ -6,16 +8,23 @@ import {Routes,Route,Navigate} from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 function App() {
 
-	const {state,add,remove,edit,register,login,logout,setError} = useAction();
+	const {getList} = useAction();
+	const {isLogged,token} = useAppState();
 	
-	if(state.isLogged) {
+	useEffect(() => {
+		if(isLogged) {
+			getList(token);
+		}
+	},[isLogged]);
+	
+	if(isLogged) {
 		return (
 			<>
-				<Navbar isLogged={state.isLogged} user={state.user} loading={state.loading} error={state.error} logout={logout}/>
+				<Navbar />
 				<hr/>
 				<Routes>
-					<Route path="/" element={<ShoppingList list={state.list} remove={remove} edit={edit}/>}/>
-					<Route path="/form" element={<ShoppingForm add={add}/>}/>
+					<Route path="/" element={<ShoppingList />}/>
+					<Route path="/form" element={<ShoppingForm/>}/>
 					<Route path="*" element={<Navigate to="/"/>}/>	
 				</Routes>
 			</>
@@ -23,10 +32,10 @@ function App() {
 	} else {
 		return(
 			<>				
-				<Navbar isLogged={state.isLogged} user={state.user} loading={state.loading} error={state.error} logout={logout}/>
+				<Navbar />
 				<hr/>
 				<Routes>
-					<Route path="/" element={<LoginPage register={register} login={login} setError={setError}/>}/>
+					<Route path="/" element={<LoginPage />}/>
 					<Route path="*" element={<Navigate to="/"/>}/>	
 				</Routes>
 			</>	

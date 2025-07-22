@@ -1,24 +1,21 @@
 import {List,ListItem,Typography} from '@mui/material';
 import {Link} from 'react-router-dom';
+import useAction from '../hooks/useAction';
+import useAppState from '../hooks/useAppState';
 
-interface Props {
-	isLogged:boolean;
-	loading:boolean;
-	error:string;
-	user:string;
-	logout():void;
-}
-
-const Navbar = (props:Props) => {
+const Navbar = () => {
+	
+	const {error,isLogged,loading,user} = useAppState();
+	const {logout} = useAction();
 	
 	let message = " ";
-	if(props.loading) {
+	if(loading) {
 		message = "Loading..."
 	}
-	if(props.error) {
-		message = props.error;
+	if(error) {
+		message = error;
 	}
-	if(props.isLogged) {
+	if(isLogged) {
 		return(
 			<List sx={{display:"flex",flexDirection:"row"}}>
 				<ListItem>
@@ -31,10 +28,10 @@ const Navbar = (props:Props) => {
 					<Link to="/form"><Typography variant="h6">Add new item</Typography></Link>
 				</ListItem>
 				<ListItem>
-					<Typography variant="h6">Logged in as {props.user}</Typography>
+					<Typography variant="h6">Logged in as {user}</Typography>
 				</ListItem>
 				<ListItem>
-					<Link to="/" onClick={props.logout}><Typography variant="h6">Logout</Typography></Link>
+					<Link to="/" onClick={logout}><Typography variant="h6">Logout</Typography></Link>
 				</ListItem>
 				<ListItem>
 					<Typography variant="h6">{message}</Typography>
