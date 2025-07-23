@@ -205,9 +205,13 @@ const useAction = () => {
 
 	//Helper functions sent to component to trigger communication with backend
 
-	const getList = (token:string) => {
+	const getList = (token:string,search?:string) => {
+		let url = "/api/shopping";
+		if(search) {
+			url = url+"?type="+search
+		}
 		setUrlRequest({
-			request: new Request("/api/shopping",{
+			request: new Request(url,{
 				method:"GET",
 				headers:{
 					"token":token
